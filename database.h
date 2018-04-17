@@ -62,7 +62,7 @@ public:
   }
   void savePost(int userID, string text)
   {
-	 postsFile.writeLine(to_string(NoPosts)+','+to_string(userID)+','+'0'+','+text);
+	 postsFile.writeLine(to_string(++NoPosts)+','+to_string(userID)+','+'0'+','+text);
   }
   string loadPost()
   {
