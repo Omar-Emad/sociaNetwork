@@ -66,7 +66,7 @@ public:
 
   }
   void savePost( string text, int postID=0 )  //postID = 0 means a new post
-  {                                           // postID = number means edit this post   
+  {                                           // postID ="number except 0" means edit this post   
 	  if(postID==0)  
 	  {
 		  postsFile.writeLine(to_string(++NoPosts)+','+text);
