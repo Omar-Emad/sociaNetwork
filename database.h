@@ -38,7 +38,7 @@ class dataBase{   // medium level
 file usersFile;
 file postsFile;
 file frindsFile;
-  //-------------------
+
 public:
   dataBase()
   {
