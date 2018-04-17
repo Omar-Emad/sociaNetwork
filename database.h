@@ -1,6 +1,8 @@
 #include <iostream>
 #include<string>
 #include<fstream>
+#include <vector>
+#include <sstream>
 
 using namespace std;
 
@@ -26,9 +28,25 @@ public:
         ofile << line <<"\n";
         ofile.close();
     }
-    string readLine(int col , string attribute)
+    string readLine(int col , string attribute) //0 for ID ... 1 for userName
     {
-
+        ifile.open (fileName,std::ofstream::out | std::ofstream::app);
+        string line;
+        while(ifile >> line)
+        {
+            vector <string> fields_line;
+            stringstream ss(line);
+            string temp;
+            while(getline(ss, temp, ','))
+            {
+                fields_line.push_back(temp);
+            }   // this vector have every data in every column in the line
+            if(attribute == fields_line[col])
+            {
+                ifile.close();
+                return line;
+            }
+        }
     }
 };
 
