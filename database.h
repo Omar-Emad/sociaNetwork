@@ -38,12 +38,14 @@ class dataBase{   // medium level
 file usersFile;
 file postsFile;
 file frindsFile;
+int NoPosts;
 public:
   dataBase()
   {
       usersFile.setFileName("data/users.txt");
       postsFile.setFileName("data/posts.txt");
       frindsFile.setFileName("data/friends.txt");
+	  NoPosts=0;
   }
 
   void saveUser()
@@ -58,9 +60,9 @@ public:
   {
 
   }
-  void savePost()
+  void savePost(int userID, string text)
   {
-
+	 postsFile.writeLine(to_string(NoPosts)+','+to_string(userID)+','+'0'+','+text);
   }
   string loadPost()
   {
@@ -83,6 +85,11 @@ string name;
 char gender;
 int age;
 public:
+	void creatPost (string text)
+	{
+		SNDB.savePost(id,text);
+	}
+
 };
 
 
