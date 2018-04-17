@@ -7,12 +7,12 @@
 using namespace std;
 
 class file{      //This is the low level of file
+public:
                  // just read or write a write a single line
 ofstream ofile;
 ifstream ifile;
 char * fileName;
 
-public:
     file( char* file_Name)
     {
         this->fileName=file_Name;
@@ -56,12 +56,36 @@ class dataBase{   // medium level
 file usersFile;
 file postsFile;
 file frindsFile;
+file countFile;
 public:
   dataBase()
   {
-      usersFile.setFileName("data/users.txt");
-      postsFile.setFileName("data/posts.txt");
-      frindsFile.setFileName("data/friends.txt");
+      usersFile.setFileName("d:\\data\\users.txt");
+      postsFile.setFileName("d:\\data\\posts.txt");
+      frindsFile.setFileName("d:\\data\\friends.txt");
+      countFile.setFileName("d:\\data\\counts.txt");
+  }
+
+  void saveCount(string userID, string postID)
+  {
+      countFile.writeLine(userID);
+      countFile.writeLine(postID);
+  }
+
+  string loadCount(string request)// "user" for userID .. "post" for postID
+  {
+      countFile.ifile.open ("d:\\data\\counts.txt",std::ofstream::out | std::ofstream::app);
+      string line;
+      int i=0;
+      string temp1, temp2;
+      while(countFile.ifile >> line)
+      {
+          i++;
+          if(i == 1) temp1 = line;
+          if(i == 2) temp2 = line;
+      }
+      if(request == "user") return temp1;
+      if(request == "post") return temp2;
   }
 
   void saveUser()
