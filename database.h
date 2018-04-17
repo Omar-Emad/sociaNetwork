@@ -1,6 +1,7 @@
 #include <iostream>
 #include<string>
 #include<fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -30,6 +31,10 @@ public:
     {
 
     }
+	void replaceLine(int id, string newLine)
+	{
+
+	}
 };
 
 class dataBase{   // medium level
@@ -60,13 +65,23 @@ public:
   {
 
   }
-  void savePost(int userID, string text)
-  {
-	 postsFile.writeLine(to_string(++NoPosts)+','+to_string(userID)+','+'0'+','+text);
+  void savePost( string text, int postID=0 )  //postID = 0 means a new post
+  {                                           // postID = number means edit this post   
+	  if(postID==0)  
+	  {
+		  postsFile.writeLine(to_string(++NoPosts)+','+text);
+	  }
+	  else
+	  {
+		  postsFile.replaceLine(postID,to_string(postID)+','+text;
+	  }
   }
-  string loadPost()
+  void editPost()
   {
-
+  }
+  string loadPost(int postID)
+  {
+	  return postsFile.readLine(1,to_string(postID));
   }
 
   void saveFrindship()
@@ -87,7 +102,7 @@ int age;
 public:
 	void creatPost (string text)
 	{
-		SNDB.savePost(id,text);
+		SNDB.savePost(to_string(id)+','+'0'+','+text);
 	}
 
 };
@@ -96,8 +111,27 @@ public:
 class post{
 int id;
 int userID;
-string postTest;
+string postText;
 int noLikes;
 public:
+	 post(string text)     //text =   5,10,2,good morning         postID,OwnerID,NO.Likes,postText 
+	 {
+		 stringstream ss(text);
+		 string x;
+		 getline(ss,x,',');
+		 id=stoi(x);
+		 getline(ss,x,',');
+		 userID=stoi(x);
+		 getline(ss,x,',');
+		 noLikes=stoi(x);
+		 getline(ss,x,',');
+		 postText=x;
+	 }
+
+	 void operator ++()  //increase likes
+	 {
+		 noLikes++;
+		 SNDB.savePost(to_string(userID)+','+to_string(noLikes)+','+postText,id);
+	 }
 
 };
