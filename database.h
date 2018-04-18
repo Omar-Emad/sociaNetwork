@@ -30,7 +30,7 @@ public:
     string readLine(int col , string attribute)
     {
 
-    }
+    }                                                //   id --> is the id of the user or the post that we want to
 	void replaceLine(int id, string newLine)
 	{
 
