@@ -5,7 +5,27 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <string>
+#include <ctype.h>
+#include "database.h"
 using namespace std;
+
+user Current_user;
+
+void delay(int seconds){
+clock_t begin_time = clock();
+   while(((clock()-begin_time)/CLOCKS_PER_SEC)< seconds);
+}
+
+bool is_number(int number)
+{
+    stringstream ss;
+    ss<<number ;
+    string s;
+    ss>>s ;
+    std::string::const_iterator it = s.begin();
+    while (it != s.end() && std::isdigit(*it)) ++it;
+    return !s.empty() && it == s.end();
+}
 
 void Welcome(string name){
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -19,11 +39,52 @@ cout <<"1) Add a new friend." << endl << endl;
 cout <<"2) Write a new post." << endl << endl;
 cout <<"3) View your friends." << endl << endl;
 cout <<"4) View someone's posts." << endl << endl;
+cout <<"5) Logout of your account." << endl << endl;
 char dummy;
 dummy=getch();
 system("CLS");
+SetConsoleTextAttribute(hConsole, 10);
+if(dummy=='1'){
+        string friendy;
+    cout<<"Enter the name you want to add as a friend"<<endl<<endl ;
+    SetConsoleTextAttribute(hConsole, 5);
+    cout<<"Name: ";
+    SetConsoleTextAttribute(hConsole, 12);
+    cin>>friendy ;
+    SetConsoleTextAttribute(hConsole, 10);
+    Current_user.addFriend(friendy);
+    system("CLS");
+    cout<<" Friend added!";
+    delay(3);
+    system("CLS");
+    Welcome(name);
 
 }
+if(dummy=='2'){
+        string post ;
+    cout<<"What do you want to write about?"<<endl<<endl ;
+    cout<<": " ;
+    cin.ignore();
+    SetConsoleTextAttribute(hConsole, 12);
+    getline(cin,post);
+    SetConsoleTextAttribute(hConsole, 10);
+    system("CLS");
+    Current_user.createPost(post);
+    cout<<" You have just made a new post!" ;
+    delay(3);
+    system("CLS");
+    Welcome(name);
+
+
+
+}
+if(dummy=='3'){}
+if(dummy=='4'){}
+if(dummy=='5'){}
+
+
+}
+
 
 
 void New_account(){
@@ -39,21 +100,35 @@ SetConsoleTextAttribute(hConsole, 12);
 cin>>username;
 cout<<endl<<endl ;
 SetConsoleTextAttribute(hConsole, 5);
+if(SNDB.userIsExisted(username)){
+    cout<<"This username is already in use!"<<endl<<endl ;
+    New_account();
+}
 cout<<"Please enter your password: " ;
 SetConsoleTextAttribute(hConsole, 12);
 cin>>password;
 cout<<endl<<endl ;
 SetConsoleTextAttribute(hConsole, 5);
-cout<<"Please enter your gender: " ;
+GENDER:cout<<"Please enter your gender (m or f): " ;
 SetConsoleTextAttribute(hConsole, 12);
 cin>>gender;
 cout<<endl<<endl ;
 SetConsoleTextAttribute(hConsole, 5);
-cout<<"Please enter your age: " ;
+if(gender != "m" && gender != "f"){
+    cout<<"Please select a valid gender! "<<endl<<endl ;
+    goto GENDER;
+}
+AGE:cout<<"Please enter your age: " ;
 SetConsoleTextAttribute(hConsole, 12);
 cin>>age;
 cout<<endl<<endl ;
+if((!is_number(age)) || age <=3 || age>100){
+    cout<<"Please enter a valid age!"<<endl<<endl ;
+    cin.ignore();
+    goto AGE;
+}
 system("CLS");
+Current_user.createUser(username, gender[0], age);
 Welcome(username) ;
 
 }
@@ -69,6 +144,11 @@ SetConsoleTextAttribute(hConsole, 12);
 cin>>username ;
 cout<<endl<<endl ;
 SetConsoleTextAttribute(hConsole, 5);
+if(!SNDB.userIsExisted(username)){
+    cout<<"Username does not exist!"<<endl<<endl ;
+    Login();
+
+}
 cout<<"Password: ";
 SetConsoleTextAttribute(hConsole, 12);
 password="" ;
@@ -82,9 +162,9 @@ while(ch != 13){
    system("CLS");
    SetConsoleTextAttribute(hConsole, 10);
    cout<<endl<<"  Access Granted !!!" ;
-   clock_t begin_time = clock();
-   while(((clock()-begin_time)/CLOCKS_PER_SEC)< 3);
+   delay(3);
    system("CLS");
+   Current_user.login(username);
    Welcome(username);
 
 
