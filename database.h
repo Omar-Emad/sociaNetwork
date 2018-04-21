@@ -287,14 +287,36 @@ public:
 	  newPost+=","+s;
 	  postsFile.replaceLine(0,postId,newPost);
   }
-  string loadFriendship()
+  string getPosts(string Mname)
   {
-
+      string id=usersFile.readAttribute(Mname,0,1);
+      vector<string> AllPosts =postsFile.readMultipleLines(1,id);
+      string strPosts="";
+      for(int i=0;i<AllPosts.size();i++)
+      {
+          vector<string> temp=strPars(AllPosts[i]);
+          returnSpaces(temp[3]);
+          strPosts+=temp[3]+"\n\n";
+      }
+      return strPosts;
+  }
+  string loadFriendships(string Mname)
+  {
+      string id=usersFile.readAttribute(Mname,0,1);
+      vector<string> AllFriends =frindsFile.readMultipleLines(0,id);
+      string strfriends="";
+      for(int i=0;i<AllFriends.size();i++)
+      {
+          vector<string> temp=strPars(AllFriends[i]);
+          strfriends+=usersFile.readAttribute(temp[1],1,0)+"\n";
+      }
+      return strfriends;
   }
   void saveFriendship(string id,string fname)
   {
-       string friendID=usersFile.readAttribute(fname,0,1);
+         string friendID=usersFile.readAttribute(fname,0,1);
          frindsFile.writeLine(id+','+friendID);
+         frindsFile.writeLine(friendID+','+id);
   }
   bool friendIsExist(string id, string fname)
   {
@@ -333,25 +355,24 @@ public:
     }
     void login(string name)
     {
-
        string logedUser= SNDB.loadUser(name);
        vector<string> user_Vstr=strPars(logedUser);
        this->id=toInt(user_Vstr[0]);
        this->name=user_Vstr[1];
        this->gender=user_Vstr[2][0];
        this->age=toInt(user_Vstr[3]);
-
-
     }
-    void addFriend(string fname)
+    bool addFriend(string fname)
     {
-        if(SNDB.userIsExisted(1,fname))
+        if(SNDB.userIsExisted(fname)&&
+           !SNDB.friendIsExist(toString(this->id) , fname) &&
+           this->name!=fname)
         {
-          if(!SNDB.friendIsExist(toString(this->id) , fname))
-          {
                 SNDB.saveFriendship(toString(this->id),fname);
-          }
+                return true;
         }
+        else
+            return false;
     }
 
     void createPost(string text)
@@ -365,9 +386,15 @@ public:
         SNDB.like(postID);
     }
 
+    string getPosts(string Mname)
+    {
 
+    }
+    string viewMyFriends()
+    {
+       return SNDB.loadFriendships(this->name);
+    }
 };
-
 
 class post{
 int id;
@@ -375,5 +402,4 @@ int userID;
 string postTest;
 int noLikes;
 public:
-
 };
