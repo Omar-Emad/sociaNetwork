@@ -129,6 +129,7 @@ if((!is_number(age)) || age <=3 || age>100){
 }
 system("CLS");
 Current_user.createUser(username, gender[0], age);
+Current_user.login(username);
 Welcome(username) ;
 
 }
