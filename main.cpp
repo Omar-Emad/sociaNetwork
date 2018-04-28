@@ -238,7 +238,7 @@ cout<<endl<<endl;
      }
 int main()
 {
-    dataBaseInit();
+   // dataBaseInit();
     while(1)
      startpage();
 
